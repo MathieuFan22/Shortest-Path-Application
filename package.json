@@ -1,0 +1,20 @@
+{
+  "name": "shortest-path-application",
+  "version": "1.0.0",
+  "description": "```\r - Mendrika Henintsoa HARIMALALA (IGGLIA 3)\r - Aina Sariaka ANDRIAMANANA (IGGLIA 3)\r - Fanirintsoa Mathieu ANDRIANANDRAINA (ISAIA 3)\r - Tsiory Herinjato ANDRIAMAHEFA (ISAIA 3)\r - Safidy Herinirina Arindranto ANDRIANTSOA (IGGLIA 3)",
+  "main": "chords.js",
+  "scripts": {
+    "start": "nodemon src/chords.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MathieuFan22/Shortest-Path-Application.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MathieuFan22/Shortest-Path-Application/issues"
+  },
+  "homepage": "https://github.com/MathieuFan22/Shortest-Path-Application#readme"
+}
