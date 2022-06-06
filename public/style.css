@@ -1,0 +1,26 @@
+.tile {
+	display: inline-block;
+	cursor: pointer;
+}
+.white {
+	height: 100px;
+	width: 20px;
+	border: solid 1px #000000;
+}
+.black {
+	position: absolute;
+	border-radius: 0 0 3px 3px;
+	height: 70px;
+	width: 15px;
+	background: #000000;
+	transform: translateX(-7.5px);
+}
+.white:hover {
+	background:#dddddd;
+}
+.black:hover {
+	background: #666666;
+}
+.pressed {
+	background: #ff6600 !important;
+}

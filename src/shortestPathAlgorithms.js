@@ -39,7 +39,7 @@ const mooreDijkstra= (M, origin= 0) => {
 		for (let v= 0; v < n; v++) {
 			// pcc[v]: shortest path from origin to v
 			// We only need the v included in unvisited
-			if (pcc[v] < pcc[j] && unvisited.some((vertex) => vertex == v)) {
+			if (pcc[v] < pcc[j] && unvisited.includes((vertex) => vertex == v)) {
 				j= v;
 			}	// END IF
 		}	// END FOR
