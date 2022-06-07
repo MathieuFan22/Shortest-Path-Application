@@ -9,15 +9,17 @@ const tester= [
 	[0, 0, 0, 0, 0, 0]
 ];	// The adjacency matrix for testing the truthness of the implementation
 
-const mooreDijkstra= (M, origin= 0) => {
+const mooreDijkstra= (M, origin= 1) => {
 	/*
 		INPUTS:
 			* M: Adjacency Matrix
 			* origin: the origin vertex
 		OUTPUTS:
 			* Shortest paths to other vertices along with their length
+		N.B.: We start counting vertex from 1 though we use 0-based array
 	*/
 
+	origin--;	// We start counting at 0
 	let paths= {};
 	/**********************************************************************************************************/
 	// STEP 1: Initialization
@@ -31,7 +33,7 @@ const mooreDijkstra= (M, origin= 0) => {
 			// if M[origin][i] != 0, pcc[i]= M[origin][i] else pcc[i]= Infinity
 			if (M[origin][i]) {
 				pcc[i]= M[origin][i];
-				paths[`to-${i}`]= [origin, i];	// The initials paths is starting from the origin
+				paths[`to-${i+1}`]= [origin+1, i+1];	// The initials paths is starting from the origin
 			}
 			else
 				pcc[i]= Infinity;
@@ -62,7 +64,7 @@ const mooreDijkstra= (M, origin= 0) => {
 					if (pcc[j] + M[j][i] < pcc[i]) {
 						// Passing by j is shorter
 						pcc[i]= pcc[j] + M[j][i];
-						paths[`to-${i}`]= [...paths[`to-${j}`], i];	// We pass to j first
+						paths[`to-${i+1}`]= [...paths[`to-${j+1}`], i+1];	// We pass to j first
 					}	// END IF
 				}	// END IF
 			}	// END FOR
@@ -73,7 +75,7 @@ const mooreDijkstra= (M, origin= 0) => {
 	// Setting the path length as the second element of the paths variable
 	for (let i= 0; i < n; i++) {
 		if (i !== origin){
-			paths[`to-${i}`]= [paths[`to-${i}`], pcc[i]];
+			paths[`to-${i+1}`]= [paths[`to-${i+1}`], pcc[i]];
 		}
 	}
 	return paths;
@@ -101,11 +103,11 @@ const floydWarshall= (M) => {
 			let path;
 
 			if (i !== row && pathLen !== Infinity) {
-				path= [i];	// The path is by default set to the destination
+				path= [i+1];	// The path is by default set to the destination
 				let h= P[row][i];	// Predecessor of i from row to i
 				
 				while (pathLen) {
-					path.unshift(h);
+					path.unshift(h+1);
 					pathLen= lengths[row][h];	// The path length from row to h
 					h= P[row][h];	// Go along to the next predecessor
 				}
@@ -113,7 +115,7 @@ const floydWarshall= (M) => {
 
 			// Add to the path if path is defined the array such that
 			// len[to-i]= [path-from-row-to-i, pathLen-from-row-to-i]	
-			if (path) len[`to-${i}`]= [path, lengths[row][i]];
+			if (path) len[`to-${i+1}`]= [path, lengths[row][i]];
 		}
 		return len;
 	}
@@ -153,21 +155,13 @@ const floydWarshall= (M) => {
 	for (let k= 0; k < n; k++) {	// k: the intermediate vertice
 		for (let i= 0; i < n; i++) {	// i: the antecedant
 			// We don't consider k
-			if (i === k)
-				if (i === n - 1)
-					break;
-				else continue;
-			else {
+			if (i !== k) {
 				if (lengths[i][k] + lengths[k][i] < 0)
 					break;	// Absorbant circuit
 				if (lengths[i][k] != Infinity) {
 					for (let j= 0; j < n; j++) {	// j: the successor
 						// We don't consider i
-						if (i === j)
-							if (i === n - 1)
-								break;
-							else continue;
-						else {
+						if (i !== j) {
 							if (lengths[i][k] + lengths[k][j] < lengths[i][j]) {
 								lengths[i][j]= lengths[i][k] + lengths[k][j];	// Set the shortest path length
 								P[i][j]= P[k][j];	// Set the predecessor in the shortest path
@@ -182,7 +176,7 @@ const floydWarshall= (M) => {
 
 	for (let i= 0; i < n; i++) {
 		// Get all the paths from each vertice to others
-		paths[`from-${i}`]= findPath(i);
+		paths[`from-${i+1}`]= findPath(i);
 	}
 
 	return paths
