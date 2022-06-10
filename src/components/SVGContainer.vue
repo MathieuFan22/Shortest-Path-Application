@@ -3,9 +3,9 @@
   <div id= 'container'>
     <svg @click= "emitToApp">
       <!-- When passing the parameter to setSelection, we pass directly index to get it from the Array in the main App -->
-      <VertexObj v-for= "(vertex, index) in vertices" :key= "index" :vx= "vertex[0]" :vy= "vertex[1]" :id= "index + 1" :selected= "vertex[2]" @selected= "passToApp" />
-      <EdgeObj v-for= "(edge, index) in edges" :key= "index" :from= "edge[0]" :to= "edge[1]" />
-      <EdgeObj from= "0,0" to= "50,50" />
+      <VertexObj v-for= "(vertex, index) in vertices" :key= "index" :vx= "vertex[0]" :vy= "vertex[1]" :id= "index + 1" :selected= "vertex[2]" :name= "vertex[3]" @selected= "passToApp" />
+      <EdgeObj v-for= "(edge, index) in edges" :key= "index" :from= "edge[0]" :to= "edge[1]" :forth= "edge[2]" :weight= "edge[3]" :passing= "edge[6]" />
+      <EdgeObj from= "20,20" to= "50,50" />
     </svg>
   </div>    
 </template>
@@ -22,8 +22,15 @@
     },
     props: {
       placingMode: Boolean,
+      linkingMode: Boolean,
       vertices: Array,
       edges: Array
+    },
+    data() {
+      let first= undefined;
+      return {
+        first,
+      }
     },
     // data() {
     //   let vertices= []; // The list of the vertices
@@ -56,11 +63,57 @@
     methods: {
       emitToApp(e) {
         // Add the coordinate directly to the main controller in App
-        this.$emit('act', [e.clientX, e.clientY, false]);
+        let { clientX, clientY }= e;  // Destructure the event
+        if (this.placingMode) {
+          let name= prompt("Enter the vertex name (facultative)");
+          if (name !== null)  // Only validate when name is different from null as null == cancelling
+          {
+            console.log(name);
+            this.$emit('addingVertex', [clientX, clientY, false, name]);
+          }
+          else
+            this.$emit('donePlacing');
+        }
+        // Clear the first selected variable
+        this.first= undefined;
       },
+      // async waitSecondParam() {
+      //   // Wait the second parameter
+      //   let v2= undefined;
+      //   while (v2 == undefined) {
+
+      //   }
+      // },
       passToApp(index) {
-        console.log(index);
-        this.$emit('setSelection', index);
+        if (this.linkingMode) {
+          // linkingMode requires 2 index to link
+          if (this.first != undefined) {
+            if (this.first !== index) {
+              let weight;
+              do {
+                weight= parseInt(prompt("Enter the weight (1 is the default weight)"));
+                if (weight <= 0)
+                  alert('Please enter a positive number');
+              } while (weight <= 0);
+              if (weight !== null) {
+                if (isNaN(weight))
+                  weight= 1;
+                this.$emit('createEdge', this.first, index, weight);
+                this.first= undefined;  // Reset first
+              }
+            }
+            else {
+              // Reset if they are the same
+              this.first= undefined;
+            }
+          }
+          else {
+            this.$emit('setSelection', index); // Selection color
+            this.first= index;
+          }
+        }
+        else
+          this.$emit('setSelection', index);
       }
     }
   }
@@ -68,7 +121,6 @@
 
 <style>
   svg {
-    border: solid 1px #000000;
     height: 100%;
     width: 100%;
   }
@@ -78,9 +130,11 @@
     fill: none;
   }
   #container {
-    border: solid 2px blue;
+    margin: 5px;
+    border: solid 1px black;
+    background: #6666ff;
     position: absolute;
-    width: calc(100% - 100px);
-    height: 100%;
+    width: calc(100% - 120px);
+    height: calc(100% - 10px);
   }
 </style>

@@ -1,6 +1,7 @@
 <!-- The sidebar -->
 <template>
   <div id= 'sidebar'>
+    <!-- Buttons -->
     <button :class= "{active: placingMode}" @click= "togglePlacingMode">
       Place a vertex
     </button>
@@ -9,6 +10,25 @@
     </button>
     <button :class= "{removal: removingMode}" :disabled= "!removingMode" @click= "$emit('toggleRemoval')">
       Remove vertex
+    </button>
+    <label>
+      From:
+    </label>
+    <select id= "from">
+      <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
+        {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
+      </option>
+    </select>
+    <label>
+      To:
+    </label>
+    <select id= "to">
+      <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
+        {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
+      </option>
+    </select>
+    <button id= "submit" @click= "evaluate">
+      Evaluate
     </button>
   </div>
 </template>
@@ -19,7 +39,8 @@
     props: {
       placingMode: Boolean,
       linkingMode: Boolean,
-      removingMode: Boolean
+      removingMode: Boolean,
+      vertices: Array
     },
     methods: {
       togglePlacingMode() {
@@ -37,6 +58,12 @@
         //   this.placingMode= false;
         // }
         this.$emit('toggleLinkingMode');
+      },
+      evaluate() {
+        let _from= document.getElementById('from');
+        let _to= document.getElementById('to');
+        console.log(parseInt(_from.value), parseInt(_to.value));
+        this.$emit('evaluate', parseInt(_from.value), parseInt(_to.value));
       }
     },
   }
@@ -44,13 +71,28 @@
 
 <style scoped>
   button {
+    margin: 4px 0;
     cursor: pointer;
     height: 50px;
-    width: 100px;
+    width: 95px;
     font-weight: 900;
+  }
+  select {
+    cursor: pointer;
+    width: 95px;
+  }
+  #submit {
+    /*position: absolute;*/
+    background: #5555ff;
+    color: white;
+    bottom: 5px;
+  }
+  #submit:hover {
+    background: #4444ff;
   }
   .removal {
     background: red;
+    color: #ffffff;
   }
   .active {
     background: #00bb00;
@@ -60,8 +102,8 @@
     display: block;
     position: absolute;
     right: 0;
-    float: right;
     width: 100px;
+    height: 100%;
     border: solid 2px yellow;
   }
 </style>
