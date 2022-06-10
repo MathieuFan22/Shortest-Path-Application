@@ -32,6 +32,7 @@ const mooreDijkstra= (M, origin= 1) => {
 			unvisited.push(i);	// unvisited= S\{origin}
 			// if M[origin][i] != 0, pcc[i]= M[origin][i] else pcc[i]= Infinity
 			if (M[origin][i]) {
+				// If there is a direct path between them
 				pcc[i]= M[origin][i];
 				paths[`to-${i+1}`]= [origin+1, i+1];	// The initials paths is starting from the origin
 			}
@@ -39,7 +40,7 @@ const mooreDijkstra= (M, origin= 1) => {
 				pcc[i]= Infinity;
 		}
 		else
-			pcc[i]= 0;
+			pcc[i]= 0;	// pcc[origin]
 	}
 
 	while (unvisited.length) {	// As long as we have unvisited paths
@@ -50,7 +51,7 @@ const mooreDijkstra= (M, origin= 1) => {
 		for (let v= 0; v < n; v++) {
 			// pcc[v]: shortest path from origin to v
 			// We only need the v included in unvisited
-			if (pcc[v] < pcc[j] && unvisited.includes((vertex) => vertex == v)) {
+			if (pcc[v] < pcc[j] && unvisited.includes(v)) {
 				j= v;
 			}	// END IF
 		}	// END FOR

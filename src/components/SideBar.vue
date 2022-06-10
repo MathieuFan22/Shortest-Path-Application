@@ -23,7 +23,7 @@
       </label>
       <select id= "from">
         <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
-          {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
+          {{vertex[3] !== ""? (index + 1) + ": " + vertex[3]: "Vertex " + (index + 1)}}
         </option>
       </select>
       <label>
@@ -31,7 +31,7 @@
       </label>
       <select id= "to">
         <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
-          {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
+          {{vertex[3] !== ""? (index + 1) + ": " + vertex[3]: "Vertex " + (index + 1)}}
         </option>
       </select>
       <button id= "submit" @click= "evaluate">

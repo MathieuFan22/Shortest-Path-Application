@@ -8,7 +8,8 @@
 <script>
   import SVGContainer from '@/components/SVGContainer';
   import SideBar from '@/components/SideBar';
-  import { floydWarshall } from '@/shortestPathAlgorithms';
+  // import { tester, mooreDijkstra, floydWarshall } from '@/shortestPathAlgorithms';
+  import { mooreDijkstra } from '@/shortestPathAlgorithms';
 
   export default {
     name: 'App',
@@ -17,6 +18,7 @@
       SideBar
     },
     data() {
+      // console.log(floydWarshall(tester));
       let placing= false;
       let linking= false;
       let removing= false;
@@ -59,7 +61,7 @@
         let forth= false;  // To decide the color of the pointing edge
         if (v1 > v2) {
           // To set colors
-          console.log('Red');
+          // console.log('Red');
           forth= true;
         }
 
@@ -105,7 +107,7 @@
       removeVertex() {
         // Remove the vertex and reset the vertices array
         // No need to test as the button is disabled if no vertex is selected
-        console.log('here: ' + this.currentlySelected);
+        // console.log('here: ' + this.currentlySelected);
         let tmp= [];
         for (let i= 0; i < this.vertices.length; i++) {
           if (i !== this.currentlySelected)
@@ -148,7 +150,7 @@
         //let output= mooreDijkstra(this.getMatrix(), _from);
         // let result= mooreDijkstra(this.getMatrix(), _from)[`to-${_to}`]; // Get the path from _from to _to
         let matrix= this.getMatrix();
-        let result= floydWarshall(matrix)[`from-${_from}`][`to-${_to}`];
+        let result= mooreDijkstra(matrix, _from)[`to-${_to}`];
         if (result[1] == Infinity)
           alert("No path linking the two vertices");
         else
@@ -162,11 +164,11 @@
         // let newEdges= [];
           let edge= [];
           for (let j= 0; j < this.edges.length; j++) {
-          console.log(edge);
-          console.log('comparing ' + result[i] + ' and ' + (this.edges[j][4] + 1)+ ' and also ' + result[i+1] + ' and ' + (this.edges[j][5] + 1))
+          // console.log(edge);
+          // console.log('comparing ' + result[i] + ' and ' + (this.edges[j][4] + 1)+ ' and also ' + result[i+1] + ' and ' + (this.edges[j][5] + 1))
             if (result[i] == this.edges[j][4] + 1 && result[i+1] == this.edges[j][5] + 1) {
               edge.push(j);
-              console.log('Checking');
+              // console.log('Checking');
             }
           // newEdges.push(edge);
           } // End for

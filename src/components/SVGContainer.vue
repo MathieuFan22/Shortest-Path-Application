@@ -67,7 +67,7 @@
           let name= prompt("Enter the vertex name (facultative)");
           if (name !== null)  // Only validate when name is different from null as null == cancelling
           {
-            console.log(name);
+            // console.log(name);
             this.$emit('addingVertex', [clientX, clientY, false, name]);
           }
           else
