@@ -15,8 +15,16 @@
       Clear
     </button>
 
+    <label>Path color:</label>
+    <select id= "color">
+      <option value= 'green'>Green</option>
+      <option value= 'purple'>Purple</option>
+      <option value= 'yellow'>Yellow</option>
+      <option value= 'orange'>Orange</option>
+    </select>
+
     <div id= "submitter">
-      <h3 v-if= "shortest !== 0">Lightest path weight: {{shortest}}</h3>
+      <h3 v-if= "shortest !== 0">Path Weight: <span id= 'min' :class= "getColor">{{shortest}}</span></h3>
       <br />
       <label>
         From:
@@ -51,6 +59,11 @@
       vertices: Array,
       shortest: Number
     },
+    computed: {
+      getColor() {
+        return document.getElementById('color').value;
+      }
+    },
     methods: {
       togglePlacingMode() {
         // this.placingMode= !this.placingMode;
@@ -74,7 +87,7 @@
         if (parseInt(_from.value) == parseInt(_to.value))
           alert("Please select two different vertices");  // Same vertex
         else
-        this.$emit('evaluate', parseInt(_from.value), parseInt(_to.value));
+        this.$emit('evaluate', parseInt(_from.value), parseInt(_to.value), document.getElementById('color').value);
       }
     },
   }
@@ -110,6 +123,7 @@
   .removal {
     background: red;
     color: #ffffff;
+    margin-bottom: 20px;
   }
   .active {
     background: #00bb00;
@@ -121,5 +135,11 @@
     right: 0;
     width: 150px;
     height: 100%;
+    text-align: center;
+  }
+  #min {
+    display: block;
+    text-align: center;
+    font-size: 50px;
   }
 </style>

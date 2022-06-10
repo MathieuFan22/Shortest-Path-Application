@@ -1,9 +1,9 @@
 <!-- SVG group for an edge in the graph -->
 <template>
   <g text-anchor= "middle">
-    <path :class= "{passing: passing}" stroke-width= "3" :d= "path" />
+    <path :class= "passing" stroke-width= "3" :d= "path" />
     <!-- The endpoint is just a circle -->
-    <circle :class= "{forth: forth}" :cx= "x2" :cy= "y2" r= "4" />
+    <circle :class= "{forth: forth}" :cx= "x2" :cy= "y2" r= "6" />
     <text :class= "{forth: forth}" :x= "(x1 + x2)/2" :y= "(y1 + y2)/2" :dx= "forth? -5: 10" :dy= "forth? -10: 5">{{weight}}</text>
   </g>
 </template>
@@ -11,14 +11,14 @@
 <script>
   export default {
     name: 'EdgeObj',
-    props: {
+    props: [
       // Coordinates in the SVG Container
-      from: String,
-      to: String,
-      forth: Boolean,
-      weight: Number,
-      passing: Boolean
-    },
+      'from',
+      'to',
+      'forth',
+      'weight',
+      'passing'
+    ],
     data() {
       let coord1= this.from.split(',');
       let coord2= this.to.split(',');
@@ -50,7 +50,16 @@
   .forth {
     fill: red;
   }
-  .passing {
+  .green {
     stroke: green;
+  }
+  .purple {
+    stroke: purple;
+  }
+  .yellow {
+    stroke: yellow;
+  }
+  .orange {
+    stroke: orange;
   }
 </style>

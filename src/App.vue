@@ -145,7 +145,7 @@
       },
 
       /* EVENT HANDLERS */
-      evaluate(_from, _to) {
+      evaluate(_from, _to, color) {
         // The evaluation
         //let output= mooreDijkstra(this.getMatrix(), _from);
         // let result= mooreDijkstra(this.getMatrix(), _from)[`to-${_to}`]; // Get the path from _from to _to
@@ -156,9 +156,9 @@
         else
           this.shortest= result[1];
         // Color the path
-        this.drawPath(result[0]);
+        this.drawPath(result[0], color);
       },
-      drawPath(result) {
+      drawPath(result, color) {
         for (let i= 0; i < result.length - 1; i++) {
         // console.log('checking ' + i)
         // let newEdges= [];
@@ -173,8 +173,9 @@
           // newEdges.push(edge);
           } // End for
         // this.edges= newEdges;
+          //Passing
           edge.forEach((index) => {
-            this.edges[index][6]= true;
+            this.edges[index][6]= color;
           });
         }
       },
