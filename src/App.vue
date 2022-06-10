@@ -1,14 +1,14 @@
 <template>
   <div>
     <SVGContainer :vertices= "vertices" :edges= "edges" :placingMode= "placing" :linkingMode= "linking" @setSelection= "setSelection" @addingVertex= "addVertex" @createEdge= "createEdge" @donePlacing= "donePlacing"  />
-    <SideBar :placingMode= "placing" :linkingMode= "linking" :removingMode= "removing" :vertices= "vertices" @togglePlacingMode= "togglePlacingMode" @toggleLinkingMode= "toggleLinkingMode" @toggleRemoval= "removeVertex" @evaluate= "evaluate" />
+    <SideBar :placingMode= "placing" :linkingMode= "linking" :removingMode= "removing" :vertices= "vertices" :shortest= "shortest" @togglePlacingMode= "togglePlacingMode" @toggleLinkingMode= "toggleLinkingMode" @toggleRemoval= "removeVertex" @evaluate= "evaluate" @clear= "clear" />
   </div>
 </template>
 
 <script>
   import SVGContainer from '@/components/SVGContainer';
   import SideBar from '@/components/SideBar';
-  import { tester, floydWarshall } from '@/shortestPathAlgorithms';
+  import { floydWarshall } from '@/shortestPathAlgorithms';
 
   export default {
     name: 'App',
@@ -20,6 +20,7 @@
       let placing= false;
       let linking= false;
       let removing= false;
+      let shortest= 0;
       let currentlySelected= null;
       let vertices= []; // [cx, xy, selected, name]
       let edges= [];  // ["x1,y1", "x2,y2", forth, weight, v1, v2, passing]
@@ -27,6 +28,7 @@
       return {
         placing,
         linking,
+        shortest,
         removing,
         currentlySelected,
         vertices,
@@ -75,7 +77,8 @@
         let _from= (parseInt(x1 - 25*cos)) + ',' + (parseInt(y1 - 25*sin));
         let _to= (parseInt(x2 + 25*cos)) + ',' + (parseInt(y2 + 25*sin));
 
-        this.edges.push([_from, _to, forth, weight, v1, v2, false]); // v1 and v2 will be used to create M
+        let ret= [_from, _to, forth, weight, v1, v2, false];
+        this.edges.push(ret); // v1 and v2 will be used to create M
         this.linkingMode= false;  // Finished linking
         this.unfocus();
       },
@@ -98,6 +101,7 @@
           this.placing= false;
         }
       },
+      /***********************************************************/
       removeVertex() {
         // Remove the vertex and reset the vertices array
         // No need to test as the button is disabled if no vertex is selected
@@ -110,6 +114,10 @@
         this.vertices= tmp;
         this.currentlySelected= null; // Reset the selected item
         this.removing= false; // Finished removal
+      },
+      clear() {
+        this.vertices= [];
+        this.edges= [];
       },
       getMatrix() {
         // Create the adjacency matrix
@@ -141,25 +149,36 @@
         // let result= mooreDijkstra(this.getMatrix(), _from)[`to-${_to}`]; // Get the path from _from to _to
         let matrix= this.getMatrix();
         let result= floydWarshall(matrix)[`from-${_from}`][`to-${_to}`];
-        console.log(result)
-        alert("The shortest path length: " + result[1]);
+        if (result[1] == Infinity)
+          alert("No path linking the two vertices");
+        else
+          this.shortest= result[1];
         // Color the path
-        for (let i= 0; i < result[0].length - 1; i++) {
-          console.log('checking ' + i)
-          this.edges.forEach((edge) => {
-            // v1 and v2 are in index 4 and 5 and we get the id by adding 1 to it
-            if (result[0][i] == edge[4] + 1 && result[0][i+1] == edge[5] + 1) {
-              edge[6]= true;
+        this.drawPath(result[0]);
+      },
+      drawPath(result) {
+        for (let i= 0; i < result.length - 1; i++) {
+        // console.log('checking ' + i)
+        // let newEdges= [];
+          let edge= [];
+          for (let j= 0; j < this.edges.length; j++) {
+          console.log(edge);
+          console.log('comparing ' + result[i] + ' and ' + (this.edges[j][4] + 1)+ ' and also ' + result[i+1] + ' and ' + (this.edges[j][5] + 1))
+            if (result[i] == this.edges[j][4] + 1 && result[i+1] == this.edges[j][5] + 1) {
+              edge.push(j);
+              console.log('Checking');
             }
-            else {
-              edge[6]= false;
-            }
+          // newEdges.push(edge);
+          } // End for
+        // this.edges= newEdges;
+          edge.forEach((index) => {
+            this.edges[index][6]= true;
           });
         }
-        //return output;
       },
       donePlacing() {
         this.placing= false;
+        this.unfocus();
       },
       togglePlacingMode() {
         this.unfocus();

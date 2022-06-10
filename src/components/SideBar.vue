@@ -8,9 +8,9 @@
     <button :class= "{active: linkingMode}" @click= "toggleLinkingMode">
       Link two vertices
     </button>
-    <button :class= "{removal: removingMode}" :disabled= "!removingMode" @click= "$emit('toggleRemoval')">
+    <!-- <button :class= "{removal: removingMode}" :disabled= "!removingMode" @click= "$emit('toggleRemoval')">
       Remove vertex
-    </button>
+    </button> -->
     <button class= "removal" @click= "$emit('clear')">
       Clear
     </button>
