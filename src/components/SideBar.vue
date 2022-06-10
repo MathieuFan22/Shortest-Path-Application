@@ -11,6 +11,9 @@
     <button :class= "{removal: removingMode}" :disabled= "!removingMode" @click= "$emit('toggleRemoval')">
       Remove vertex
     </button>
+    <button class= "removal" @click= "$emit('clear')">
+      Clear
+    </button>
 
     <div id= "submitter">
       <h3 v-if= "shortest !== 0">Lightest path weight: {{shortest}}</h3>

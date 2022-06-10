@@ -73,6 +73,9 @@
           else
             this.$emit('donePlacing');
         }
+        else {
+          this.$emit('donePlacing');
+        }
         // Clear the first selected variable
         this.first= undefined;
       },
@@ -109,6 +112,7 @@
             }
             else {
               // Reset if they are the same
+              this.$emit('donePlacing');
               this.first= undefined;
             }
           }
@@ -135,12 +139,12 @@
     fill: none;
   }
   #container {
-    margin: 5px 0;
+    margin: 5px 10px 5px 5px;
     cursor: pointer;
     border: solid 1px black;
-    background: #6666ff;
+    background: #bbbbbb;
     position: absolute;
-    width: calc(100% - 150px);
+    width: calc(100% - 160px);
     height: calc(100% - 10px);
   }
 </style>
