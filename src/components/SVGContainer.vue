@@ -5,7 +5,6 @@
       <!-- When passing the parameter to setSelection, we pass directly index to get it from the Array in the main App -->
       <VertexObj v-for= "(vertex, index) in vertices" :key= "index" :vx= "vertex[0]" :vy= "vertex[1]" :id= "index + 1" :selected= "vertex[2]" :name= "vertex[3]" @selected= "passToApp" />
       <EdgeObj v-for= "(edge, index) in edges" :key= "index" :from= "edge[0]" :to= "edge[1]" :forth= "edge[2]" :weight= "edge[3]" :passing= "edge[6]" />
-      <EdgeObj from= "20,20" to= "50,50" />
     </svg>
   </div>    
 </template>
@@ -89,17 +88,23 @@
           // linkingMode requires 2 index to link
           if (this.first != undefined) {
             if (this.first !== index) {
-              let weight;
+              let p, weight;
               do {
-                weight= parseInt(prompt("Enter the weight (1 is the default weight)"));
-                if (weight <= 0)
+                p= prompt("Enter the weight (1 is the default weight)");
+                if (parseInt(p) <= 0)
                   alert('Please enter a positive number');
-              } while (weight <= 0);
-              if (weight !== null) {
-                if (isNaN(weight))
+              } while (parseInt(p) <= 0 && p !== null && p !== "");
+              if (p !== null) {
+                if (p == "")
                   weight= 1;
+                else
+                  weight= parseInt(p);
                 this.$emit('createEdge', this.first, index, weight);
                 this.first= undefined;  // Reset first
+              }
+              else {
+                this.first= undefined;
+                this.$emit('donePlacing');
               }
             }
             else {
@@ -130,11 +135,12 @@
     fill: none;
   }
   #container {
-    margin: 5px;
+    margin: 5px 0;
+    cursor: pointer;
     border: solid 1px black;
     background: #6666ff;
     position: absolute;
-    width: calc(100% - 120px);
+    width: calc(100% - 150px);
     height: calc(100% - 10px);
   }
 </style>

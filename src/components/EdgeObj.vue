@@ -4,7 +4,7 @@
     <path :class= "{passing: passing}" stroke-width= "3" :d= "path" />
     <!-- The endpoint is just a circle -->
     <circle :class= "{forth: forth}" :cx= "x2" :cy= "y2" r= "4" />
-    <text :x= "x2" :y= "y2" :dy= "forth? -20: 20">{{weight}}</text>
+    <text :class= "{forth: forth}" :x= "(x1 + x2)/2" :y= "(y1 + y2)/2" :dx= "forth? -5: 10" :dy= "forth? -10: 5">{{weight}}</text>
   </g>
 </template>
 
@@ -41,6 +41,8 @@
 <style scoped>
   text {
     font-weight: 900;
+    font-size: 25px;
+    fill: blue;
   }
   circle {
     fill: blue;

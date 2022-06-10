@@ -11,25 +11,30 @@
     <button :class= "{removal: removingMode}" :disabled= "!removingMode" @click= "$emit('toggleRemoval')">
       Remove vertex
     </button>
-    <label>
-      From:
-    </label>
-    <select id= "from">
-      <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
-        {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
-      </option>
-    </select>
-    <label>
-      To:
-    </label>
-    <select id= "to">
-      <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
-        {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
-      </option>
-    </select>
-    <button id= "submit" @click= "evaluate">
-      Evaluate
-    </button>
+
+    <div id= "submitter">
+      <h3 v-if= "shortest !== 0">Lightest path weight: {{shortest}}</h3>
+      <br />
+      <label>
+        From:
+      </label>
+      <select id= "from">
+        <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
+          {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
+        </option>
+      </select>
+      <label>
+        To:
+      </label>
+      <select id= "to">
+        <option v-for= "(vertex, index) in vertices" :key= "index" :value= "index+1">
+          {{vertex[3] !== ""? ": " + vertex[3]: "Vertex " + (index + 1)}}
+        </option>
+      </select>
+      <button id= "submit" @click= "evaluate">
+        Evaluate
+      </button>
+    </div>
   </div>
 </template>
 
@@ -40,7 +45,8 @@
       placingMode: Boolean,
       linkingMode: Boolean,
       removingMode: Boolean,
-      vertices: Array
+      vertices: Array,
+      shortest: Number
     },
     methods: {
       togglePlacingMode() {
@@ -62,7 +68,9 @@
       evaluate() {
         let _from= document.getElementById('from');
         let _to= document.getElementById('to');
-        console.log(parseInt(_from.value), parseInt(_to.value));
+        if (parseInt(_from.value) == parseInt(_to.value))
+          alert("Please select two different vertices");  // Same vertex
+        else
         this.$emit('evaluate', parseInt(_from.value), parseInt(_to.value));
       }
     },
@@ -71,15 +79,17 @@
 
 <style scoped>
   button {
-    margin: 4px 0;
+    margin: 2px;
     cursor: pointer;
     height: 50px;
-    width: 95px;
+    width: 145px;
     font-weight: 900;
+    border-radius: 10px;
   }
   select {
+    margin: 2px;
     cursor: pointer;
-    width: 95px;
+    width: 145px;
   }
   #submit {
     /*position: absolute;*/
@@ -89,6 +99,10 @@
   }
   #submit:hover {
     background: #4444ff;
+  }
+  #submitter {
+    position: absolute;
+    bottom: 5px;
   }
   .removal {
     background: red;
@@ -102,8 +116,7 @@
     display: block;
     position: absolute;
     right: 0;
-    width: 100px;
+    width: 150px;
     height: 100%;
-    border: solid 2px yellow;
   }
 </style>
