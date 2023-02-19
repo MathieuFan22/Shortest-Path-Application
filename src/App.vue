@@ -26,7 +26,7 @@
       let currentlySelected= null;
       let vertices= []; // [cx, xy, selected, name]
       let edges= [];  // ["x1,y1", "x2,y2", forth, weight, v1, v2, passing]
-
+      let currentlyLinked= [];
       return {
         placing,
         linking,
@@ -35,6 +35,7 @@
         currentlySelected,
         vertices,
         edges,
+        currentlyLinked
       }
     },
     // computed: {
@@ -86,7 +87,7 @@
       },
       unfocus() {
         // Remove the selection from the current Vertex
-        if (this.currentlySelected !== null) {
+        if (this.vertices.length && this.currentlySelected !== null) {
           // Take off the currentlySelected one
           this.vertices[this.currentlySelected][2]= false;
         }
@@ -149,6 +150,13 @@
         // The evaluation
         //let output= mooreDijkstra(this.getMatrix(), _from);
         // let result= mooreDijkstra(this.getMatrix(), _from)[`to-${_to}`]; // Get the path from _from to _to
+        
+        // We takeout all focuses
+        this.placing= false;
+        this.linking= false;
+        this.removing= false;
+        this.unfocus();
+
         let matrix= this.getMatrix();
         let result= mooreDijkstra(matrix, _from)[`to-${_to}`];
         if (result[1] == Infinity)
@@ -156,6 +164,11 @@
         else
           this.shortest= result[1];
         // Color the path
+        if (this.currentlyLinked.includes(`${_from},${_to}`))
+          // Reevaluate the path if it has already been calculated
+          this.clearPath();
+        else
+          this.currentlyLinked.push(`${_from},${_to}`); // Save the already calculated path
         this.drawPath(result[0], color);
       },
       drawPath(result, color) {
@@ -178,6 +191,12 @@
             this.edges[index][6]= color;
           });
         }
+      },
+      clearPath() {
+        // Reset path colors
+        this.edges.forEach((edge) => {
+          edge[6]= false;
+        });
       },
       donePlacing() {
         this.placing= false;

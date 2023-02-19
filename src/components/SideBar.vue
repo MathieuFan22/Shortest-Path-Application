@@ -86,8 +86,8 @@
         let _to= document.getElementById('to');
         if (parseInt(_from.value) == parseInt(_to.value))
           alert("Please select two different vertices");  // Same vertex
-        else
-        this.$emit('evaluate', parseInt(_from.value), parseInt(_to.value), document.getElementById('color').value);
+        else if (_from.value !== "")
+          this.$emit('evaluate', parseInt(_from.value), parseInt(_to.value), document.getElementById('color').value);
       }
     },
   }
@@ -102,6 +102,10 @@
     font-weight: 900;
     border-radius: 10px;
   }
+  button:hover {
+    background: #999999;
+    color: #ffffff;
+  }
   select {
     margin: 2px;
     cursor: pointer;
@@ -114,7 +118,7 @@
     bottom: 5px;
   }
   #submit:hover {
-    background: #4444ff;
+    background: #3333ff;
   }
   #submitter {
     position: absolute;
@@ -125,9 +129,15 @@
     color: #ffffff;
     margin-bottom: 20px;
   }
+  .removal:hover {
+    background: #ee0000;
+  }
   .active {
     background: #00bb00;
     color: #ffffff;
+  }
+  .active:hover {
+    background: #009900;
   }
   #sidebar {
     display: block;
